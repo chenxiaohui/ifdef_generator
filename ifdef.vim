@@ -12,9 +12,17 @@
 
 "*
 
-if !exists("g:ifndef_prefix") 
+if !exists("g:ifndef_prefix")
 	let g:ifndef_prefix=''
-	let g:ifndef_strip=''
+	"let g:ifndef_strip=''
+endif
+
+if !exists("g:ifndef_namespace_outer")
+	let g:ifndef_namespace_outer='oceanbase'
+endif
+
+if !exists("g:ifndef_namespace_inner")
+	let g:ifndef_namespace_inner='common'
 endif
 
 
@@ -26,28 +34,33 @@ function InsertHeadDef(firstLine, lastLine)
     let sourcefilename=expand("%:t")
     let definename=substitute(sourcefilename,' ','','g')
     let definename=substitute(definename,'\.','_','g')
+    let definename=substitute(definename,'/','_','g')
     let definename = toupper(definename)
-    let definename =substitute(definename,g:ifndef_strip,'','g')
+    "let definename =substitute(definename,g:ifndef_strip,'','g')
+
+    let final_macro_name = g:ifndef_prefix.definename
+
+
     exe 'normal '.a:firstLine.'GO'
-    call setline('.', '#ifndef '.g:ifndef_prefix.definename."_")
+    call setline('.', '#ifndef '.final_macro_name."_")
     normal ==o
-    call setline('.', '#define '.g:ifndef_prefix.definename."_")
+    call setline('.', '#define '.final_macro_name."_")
     normal ==o
-    call setline('.', 'namespace oceanbase')
+    call setline('.', 'namespace '.g:ifndef_namespace_outer)
     normal ==o
     call setline('.', '{')
     normal ==o
-    call setline('.', 'namespace common')
+    call setline('.', 'namespace '.g:ifndef_namespace_inner)
     normal ==o
     call setline('.', '{')
 
 
     exe 'normal =='.(a:lastLine-a:firstLine+1).'jo'
-    call setline('.', '}')
+    call setline('.', '}//'.g:ifndef_namespace_inner)
     normal ==o
-    call setline('.', '}')
+    call setline('.', '}//'.g:ifndef_namespace_outer)
     normal ==o
-    call setline('.', '#endif //'.g:ifndef_prefix.definename."_")
+    call setline('.', '#endif //'.final_macro_name."_")
     exe 'normal gg=G'
 endfunction
 
@@ -57,7 +70,7 @@ function InsertHeadDefN()
     let n=1
     while n < 20
         let line = getline(n)
-        if n==1 
+        if n==1
             if line =~ '^\/\*.*$'
                 let n = n + 1
                 continue

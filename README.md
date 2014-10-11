@@ -11,9 +11,11 @@ auto generate if def macro using file name (or path maybe)
 
 copy to plugin directory, and add below to your vimrc.
 
-    "{{{ plugin-ifdef.vim 提供ifdef生成
-       let g:ifndef_prefix="OCEANBASE_"
-        let g:ifndef_strip="OB_"
+    "{{{ plugin-snipMate.vim 提供snippets补全
+        let g:ifndef_prefix="OCEANBASE_"
+        "let g:ifndef_strip="OB_"
+        let g:ifndef_namespace_outer="oceanbase"
+        let g:ifndef_namespace_inner="updateserver"
         nmap <leader>df :call InsertHeadDefN()<cr>
     "}}}
 
