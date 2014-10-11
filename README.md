@@ -3,8 +3,7 @@ ifdef_generator
 
 generate if_def automatically
 
-
-### ifdef.vim: if def generator:
+### ifdef.vim
 
 auto generate if def macro using file name (or path maybe)
 
