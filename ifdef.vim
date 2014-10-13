@@ -25,13 +25,19 @@ if !exists("g:ifndef_namespace_inner")
 	let g:ifndef_namespace_inner='common'
 endif
 
+if !exists('g:base_dir')
+    "set base_dir_mark to indicate where to generate post-review.sh
+    let g:base_dir = ['src', 'tests', 'unittest']
+endif
 
 function InsertHeadDef(firstLine, lastLine)
     if a:firstLine <1 || a:lastLine> line('$')
         echoerr 'InsertHeadDef : Range overflow !(FirstLine:'.a:firstLine.';LastLine:'.a:lastLine.';ValidRange:1~'.line('$').')'
         return ''
     endif
-    let sourcefilename=expand("%:t")
+
+    let sourcefilename=GetDir()
+
     let definename=substitute(sourcefilename,' ','','g')
     let definename=substitute(definename,'\.','_','g')
     let definename=substitute(definename,'/','_','g')
@@ -87,3 +93,13 @@ function InsertHeadDefN()
     call InsertHeadDef(firstLine, lastLine)
 endfunction
 
+function! GetDir()
+    let base_path=expand("%:p")
+    for dir in g:base_dir
+        let idx =stridx(base_path,dir)
+        if idx >= 0
+            return strpart(base_path, idx+strlen(dir)+1)
+        endif
+    endfor
+    return expand("%:t")
+endf

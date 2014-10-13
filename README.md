@@ -17,6 +17,7 @@ copy to plugin directory, and add below to your vimrc.
         let g:ifndef_namespace_outer="oceanbase"
         let g:ifndef_namespace_inner="updateserver"
         nmap <leader>df :call InsertHeadDefN()<cr>
+        let g:base_dir = ['src', 'tests', 'unittest','tools']
     "}}}
 
 #### Effect:
